@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video History & Favorites - VideoMind AI</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Sticky Glass Navigation Bar -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span class="brand-title">VideoMind <span class="gradient-text">AI</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link">Home</a></li>
+      <li><a href="/chat.html" class="nav-link">AI Studio</a></li>
+      <li><a href="/history.html" class="nav-link active">History</a></li>
+      <li><a href="/settings.html" class="nav-link">Settings</a></li>
+    </ul>
+    <div class="nav-actions">
+      <!-- Animated Theme Toggle -->
+      <div id="themeToggleBtn" class="theme-switch" role="button" tabindex="0" title="Toggle Light/Dark Theme">
+        <span class="theme-switch-icon">🌙</span>
+        <span class="theme-switch-thumb"></span>
+        <span class="theme-switch-icon">☀️</span>
+      </div>
+      <button class="btn btn-secondary" style="border-radius: var(--radius-full);" onclick="clearHistoryUI()">Clear History 🗑️</button>
+    </div>
+  </nav>
+
+  <main style="max-width: 1200px; margin: 3.5rem auto; padding: 0 1.5rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 style="font-size: 2.4rem; margin-bottom: 0.35rem;">Analyzed Video Archive</h1>
+        <p style="color: var(--text-secondary); font-size: 1.05rem;">Access your recent video transcript analyses and saved favorites.</p>
+      </div>
+
+      <div style="position: relative; max-width: 320px; width: 100%;">
+        <input type="text" id="historySearchInput" class="url-input" placeholder="Search history by title..." style="width: 100%; background: var(--glass-card); border: 1px solid var(--glass-border); padding: 0.65rem 1.1rem; border-radius: var(--radius-full); font-size: 0.95rem;" onkeyup="filterHistoryUI(this.value)">
+      </div>
+    </div>
+
+    <div id="historyGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.75rem;">
+      <!-- History Cards Rendered Dynamically -->
+    </div>
+  </main>
+
+  <script src="/assets/js/app.js"></script>
+  <script src="/assets/js/firebase.js"></script>
+  <script src="/js/animations.js"></script>
+  <script>
+    function renderHistory() {
+      const grid = document.getElementById('historyGrid');
+      const items = firebaseManager.getLocalHistory();
+
+      if (!items || items.length === 0) {
+        grid.innerHTML = `
+          <div class="glass-card" style="grid-column: 1 / -1; text-align: center; padding: 5rem 2rem;">
+            <div style="font-size: 3.5rem; margin-bottom: 1rem;">📜</div>
+            <h3 style="font-size: 1.4rem; margin-bottom: 0.5rem;">No Video History Yet</h3>
+            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 2rem auto; font-size: 0.98rem;">Paste a YouTube URL on the home page or AI Studio to perform transcript ingestion.</p>
+            <a href="/chat.html" class="btn btn-primary" style="border-radius: var(--radius-full);">Open AI Studio 🚀</a>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => `
+        <div class="glass-card" style="display: flex; flex-direction: column; gap: 1rem; overflow: hidden;">
+          <div style="position: relative; width: 100%; height: 180px; border-radius: var(--radius-md); overflow: hidden; background: #000;">
+            <img src="${item.thumbnail_url || 'https://img.youtube.com/vi/' + item.video_id + '/hqdefault.jpg'}" style="width: 100%; height: 100%; object-fit: cover; transition: transform var(--transition-normal);" alt="Thumbnail" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+          </div>
+          <h3 style="font-size: 1.1rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 0.25rem;">${item.title}</h3>
+          <p style="font-size: 0.88rem; color: var(--text-secondary);">${item.author || 'YouTube Creator'} • ${item.duration || ''}</p>
+          <div style="display: flex; gap: 0.6rem; margin-top: auto; padding-top: 0.5rem;">
+            <a href="/chat.html?v=${item.video_id}" class="btn btn-primary" style="flex: 1; font-size: 0.88rem; border-radius: var(--radius-full);">Open Studio ✨</a>
+            <button class="btn btn-secondary btn-icon" style="border-radius: var(--radius-full);" onclick="deleteItemUI('${item.video_id}')" title="Delete">🗑️</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteItemUI(videoId) {
+      firebaseManager.deleteHistoryItem(videoId);
+      AnimationEngine.showToast('Removed item from history.', 'info');
+      renderHistory();
+    }
+
+    function clearHistoryUI() {
+      if (confirm('Are you sure you want to clear your video history?')) {
+        firebaseManager.clearHistory();
+        renderHistory();
+        AnimationEngine.showToast('History cleared.', 'info');
+      }
+    }
+
+    function filterHistoryUI(query) {
+      const q = query.toLowerCase();
+      const cards = document.querySelectorAll('#historyGrid .glass-card');
+      cards.forEach(card => {
+        const title = card.querySelector('h3')?.innerText.toLowerCase() || '';
+        if (title.includes(q)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', renderHistory);
+  </script>
+</body>
+</html>

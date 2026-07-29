@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings & Preferences - VideoMind AI</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Sticky Glass Navigation Bar -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span class="brand-title">VideoMind <span class="gradient-text">AI</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link">Home</a></li>
+      <li><a href="/chat.html" class="nav-link">AI Studio</a></li>
+      <li><a href="/history.html" class="nav-link">History</a></li>
+      <li><a href="/settings.html" class="nav-link active">Settings</a></li>
+    </ul>
+    <div class="nav-actions">
+      <!-- Animated Theme Toggle -->
+      <div id="themeToggleBtn" class="theme-switch" role="button" tabindex="0" title="Toggle Light/Dark Theme">
+        <span class="theme-switch-icon">🌙</span>
+        <span class="theme-switch-thumb"></span>
+        <span class="theme-switch-icon">☀️</span>
+      </div>
+      <a href="/chat.html" class="btn btn-primary" style="border-radius: var(--radius-full);">Open Studio ✨</a>
+    </div>
+  </nav>
+
+  <main style="max-width: 850px; margin: 3.5rem auto; padding: 0 1.5rem;">
+    <h1 style="font-size: 2.4rem; margin-bottom: 0.5rem;">Platform Settings</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 2.75rem; font-size: 1.05rem;">Customize AI models, voice speeds, visual themes, and playback options.</p>
+
+    <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+
+      <!-- Theme Preference -->
+      <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+        <div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 0.25rem;">Interface Theme</h3>
+          <p style="color: var(--text-secondary); font-size: 0.92rem;">Choose between Dark Glassmorphism and Light mode.</p>
+        </div>
+        <select id="themeSelect" class="url-input" style="max-width: 170px; background: var(--bg-tertiary); border: 1px solid var(--glass-border); padding: 0.55rem 0.85rem; border-radius: var(--radius-md);" onchange="appManager.saveSettings({ theme: this.value })">
+          <option value="dark">🌙 Dark Glass</option>
+          <option value="light">☀️ Light Mode</option>
+        </select>
+      </div>
+
+      <!-- Voice Playback Speed -->
+      <div class="glass-card" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+        <div>
+          <h3 style="font-size: 1.15rem; margin-bottom: 0.25rem;">Voice Playback Speed</h3>
+          <p style="color: var(--text-secondary); font-size: 0.92rem;">Adjust Text-to-Speech audio reader speed.</p>
+        </div>
+        <select id="voiceSpeedSelect" class="url-input" style="max-width: 150px; background: var(--bg-tertiary); border: 1px solid var(--glass-border); padding: 0.55rem 0.85rem; border-radius: var(--radius-md);" onchange="appManager.saveSettings({ voiceSpeed: parseFloat(this.value) })">
+          <option value="0.75">0.75x Slow</option>
+          <option value="1.0">1.0x Normal</option>
+          <option value="1.25">1.25x Fast</option>
+          <option value="1.5">1.5x Speedy</option>
+        </select>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/assets/js/app.js"></script>
+  <script src="/assets/js/firebase.js"></script>
+  <script src="/js/animations.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const select = document.getElementById('themeSelect');
+      if (select) select.value = appManager.settings.theme || 'dark';
+      const voice = document.getElementById('voiceSpeedSelect');
+      if (voice) voice.value = appManager.settings.voiceSpeed || 1.0;
+    });
+  </script>
+</body>
+</html>

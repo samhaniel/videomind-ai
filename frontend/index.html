@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VideoMind AI - Redefining YouTube Video Intelligence</title>
+  <meta name="description" content="Turn any YouTube video transcript into grounded Q&A, study notes, flashcards, and MCQ quizzes using Google Gemini AI.">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Sticky Glass Navigation Bar -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span class="brand-title">VideoMind <span class="gradient-text">AI</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link active">Home</a></li>
+      <li><a href="/chat.html" class="nav-link">AI Studio</a></li>
+      <li><a href="/history.html" class="nav-link">History</a></li>
+      <li><a href="/settings.html" class="nav-link">Settings</a></li>
+    </ul>
+    <div class="nav-actions">
+      <!-- Animated Theme Toggle -->
+      <div id="themeToggleBtn" class="theme-switch" role="button" tabindex="0" title="Toggle Light/Dark Theme">
+        <span class="theme-switch-icon">🌙</span>
+        <span class="theme-switch-thumb"></span>
+        <span class="theme-switch-icon">☀️</span>
+      </div>
+      <a href="/chat.html" class="btn btn-primary">Open AI Studio ✨</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="hero-tag">✨ Next-Gen YouTube Video Intelligence</div>
+    <h1 class="hero-title">
+      Understand Every YouTube Video in <span class="gradient-text">Minutes</span>.
+    </h1>
+    <p class="hero-subtitle">
+      Stop wasting hours watching long lectures and podcasts. Paste any link and convert spoken transcripts into deep structured insights, interactive flashcards, and grounded ChatGPT-style Q&A.
+    </p>
+
+    <!-- URL Input Container -->
+    <form id="heroForm" class="url-input-container">
+      <span class="url-input-icon">🔗</span>
+      <input type="text" id="heroUrlInput" class="url-input" placeholder="Paste YouTube Video URL (e.g. https://www.youtube.com/watch?v=...)" autocomplete="off">
+      <button type="button" class="btn btn-secondary" style="padding: 0.5rem 0.8rem; font-size: 0.82rem; border-radius: var(--radius-full);" onclick="pasteHeroUrl()" title="Paste from clipboard">📋 Paste</button>
+      <button type="submit" id="heroAnalyzeBtn" class="btn btn-primary url-submit-btn">
+        Analyze Video 🚀
+      </button>
+    </form>
+
+    <!-- Sample Video Links -->
+    <div class="sample-links">
+      <span style="font-size: 0.88rem; color: var(--text-muted); font-weight: 500;">Try sample videos:</span>
+      <button class="sample-tag" onclick="analyzeSample('https://www.youtube.com/watch?v=aircAruvnKk')">🧠 Neural Networks Masterclass</button>
+      <button class="sample-tag" onclick="analyzeSample('https://www.youtube.com/watch?v=kqtD5dpn9C8')">💻 Python Programming</button>
+      <button class="sample-tag" onclick="analyzeSample('https://www.youtube.com/watch?v=dQw4w9WgXcQ')">🎵 Music Video</button>
+    </div>
+  </header>
+
+  <!-- Core Features Grid -->
+  <section style="max-width: 1200px; margin: 5rem auto; padding: 0 1.5rem;">
+    <div style="text-align: center; margin-bottom: 3.5rem;">
+      <h2 style="font-size: 2.5rem; margin-bottom: 0.85rem;">Engineered for <span class="gradient-accent-text">Deep Video Intelligence</span></h2>
+      <p style="color: var(--text-secondary); max-width: 620px; margin: 0 auto; font-size: 1.05rem;">Analyzing spoken transcript chunks with Google Gemini RAG technology.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.75rem;">
+      <div class="glass-card">
+        <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: rgba(0, 242, 254, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--accent-cyan);">💬</div>
+        <h3 style="font-size: 1.35rem; margin-bottom: 0.6rem;">Strict Grounded Chat</h3>
+        <p style="color: var(--text-secondary); font-size: 0.98rem; line-height: 1.6;">Answers strictly from analyzed video transcripts with zero hallucination. Features response regeneration and stream text typing.</p>
+      </div>
+
+      <div class="glass-card">
+        <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: rgba(139, 92, 246, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--accent-purple);">📊</div>
+        <h3 style="font-size: 1.35rem; margin-bottom: 0.6rem;">18+ Analysis Formats</h3>
+        <p style="color: var(--text-secondary); font-size: 0.98rem; line-height: 1.6;">Quick & Detailed Summaries, Takeaways, Timelines, Definitions, Action Points, ELI5, FAQs, and Technical breakdowns.</p>
+      </div>
+
+      <div class="glass-card">
+        <div style="width: 50px; height: 50px; border-radius: var(--radius-md); background: rgba(236, 72, 153, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--accent-pink);">🎴</div>
+        <h3 style="font-size: 1.35rem; margin-bottom: 0.6rem;">Flashcards & MCQ Quizzes</h3>
+        <p style="color: var(--text-secondary); font-size: 0.98rem; line-height: 1.6;">Auto-generate 3D interactive flip cards and multiple-choice quizzes to master video concepts effortlessly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="border-top: 1px solid var(--glass-border); padding: 3.5rem 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.92rem; background: rgba(11, 18, 32, 0.4);">
+    <p>© 2026 VideoMind AI Platform • Powered by Google Gemini 2.5 & Python Flask</p>
+  </footer>
+
+  <script src="/assets/js/app.js"></script>
+  <script src="/assets/js/firebase.js"></script>
+  <script src="/assets/js/youtube.js"></script>
+  <script src="/js/animations.js"></script>
+  <script>
+    const heroForm = document.getElementById('heroForm');
+    if (heroForm) {
+      heroForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = document.getElementById('heroUrlInput').value.trim();
+        if (url) {
+          window.location.href = `/chat.html?url=${encodeURIComponent(url)}`;
+        } else {
+          AnimationEngine.showToast('Please paste a YouTube URL first.', 'error');
+        }
+      });
+    }
+
+    async function pasteHeroUrl() {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (text) {
+          document.getElementById('heroUrlInput').value = text;
+          AnimationEngine.showToast('Pasted URL from clipboard!', 'success');
+        }
+      } catch (err) {
+        AnimationEngine.showToast('Clipboard access denied.', 'info');
+      }
+    }
+
+    function analyzeSample(url) {
+      window.location.href = `/chat.html?url=${encodeURIComponent(url)}`;
+    }
+
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('mainNavbar');
+      if (window.scrollY > 20) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VideoMind AI Studio - Deep Video Intelligence Workspace</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/chat.css">
+  <link rel="stylesheet" href="/assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Sticky Glass Navigation Bar -->
+  <nav class="navbar" id="mainNavbar">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">⚡</div>
+      <span class="brand-title">VideoMind <span class="gradient-text">Studio</span></span>
+    </a>
+
+    <!-- Header Quick URL Input -->
+    <form id="studioUrlForm" class="studio-url-form">
+      <div style="position: relative; flex: 1; min-width: 0;">
+        <input type="text" id="studioUrlInput" class="chat-input-field" placeholder="Paste YouTube Video URL to analyze..." style="width: 100%; padding: 0.6rem 1.1rem; border-radius: var(--radius-full);">
+      </div>
+      <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.4rem; font-size: 0.88rem; border-radius: var(--radius-full); white-space: nowrap;">Analyze 🚀</button>
+    </form>
+
+    <div class="nav-actions">
+      <!-- Animated Theme Toggle -->
+      <div id="themeToggleBtn" class="theme-switch" role="button" tabindex="0" title="Toggle Light/Dark Theme">
+        <span class="theme-switch-icon">🌙</span>
+        <span class="theme-switch-thumb"></span>
+        <span class="theme-switch-icon">☀️</span>
+      </div>
+      <a href="/history.html" class="btn btn-secondary" style="border-radius: var(--radius-full);">History 📜</a>
+    </div>
+  </nav>
+
+  <!-- Main Studio Workspace -->
+  <main class="studio-container">
+    
+    <!-- Left Column: Video Card & Metadata -->
+    <aside class="video-sidebar">
+      <div class="player-wrapper" id="playerWrapper">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--text-muted); padding: 2.5rem; text-align: center;">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--glass-active); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent-cyan); margin-bottom: 1rem;">📺</div>
+          <h4 style="font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--text-primary);">Video Workspace Ready</h4>
+          <p style="font-size: 0.9rem; color: var(--text-secondary);">Paste a YouTube URL above to load player & transcript analysis.</p>
+        </div>
+      </div>
+
+      <div class="glass-card video-info-card">
+        <div class="creator-header">
+          <div class="creator-avatar" id="creatorAvatarEl">AI</div>
+          <div class="creator-details">
+            <h2 class="video-title" id="videoTitleEl">Video Intelligence Workspace</h2>
+            <div class="video-meta-tags" id="videoAuthorEl" style="margin-top: 0.25rem;">
+              <span class="meta-badge">✨ Ready for transcript ingestion</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="video-action-bar">
+          <button class="btn btn-secondary" onclick="firebaseManager.toggleFavorite(studioController.currentVideoId); AnimationEngine.showToast('Updated favorites!', 'success');">⭐ Favorite</button>
+          <button class="btn btn-secondary" onclick="ExportEngine.copyToClipboard(window.location.href, 'Studio Link')">🔗 Share Link</button>
+          <button class="btn btn-secondary" onclick="ExportEngine.exportMarkdown(studioController.currentMetadata?.title || 'Video', studioController.currentSummaryContent)">📥 Notes</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right Column: AI Studio Panels -->
+    <section class="studio-main">
+      <header class="studio-header">
+        <nav class="studio-tabs">
+          <button class="tab-btn active" data-tab="summary">📌 AI Intelligence</button>
+          <button class="tab-btn" data-tab="chat">💬 Grounded Chat</button>
+          <button class="tab-btn" data-tab="flashcards">🎴 Flashcards</button>
+          <button class="tab-btn" data-tab="quiz">🧠 MCQ Quiz</button>
+        </nav>
+
+        <!-- 18+ Analysis Styles Dropdown -->
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <label style="font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Format:</label>
+          <select id="summaryStyleSelect" class="chat-input-field" style="padding: 0.4rem 0.85rem; font-size: 0.88rem; border-radius: var(--radius-md);" onchange="studioController.loadSummaryStyle(this.value)">
+            <option value="quick">⚡ Quick Summary</option>
+            <option value="detailed">📌 Detailed Breakdown</option>
+            <option value="bullet">🎯 Bullet Points</option>
+            <option value="takeaways">💡 Key Takeaways</option>
+            <option value="timeline">⏱️ Timeline & Chapters</option>
+            <option value="topics">🔑 Important Topics</option>
+            <option value="definitions">📖 Important Definitions</option>
+            <option value="action">⚡ Action Points</option>
+            <option value="notes">📚 Study & Revision Notes</option>
+            <option value="faqs">❓ Frequently Asked Questions</option>
+            <option value="interview">💼 Interview Questions</option>
+            <option value="quotes">💬 Important Quotes</option>
+            <option value="technical">⚙️ Technical Breakdown</option>
+            <option value="beginner">🎈 Beginner Explanation</option>
+            <option value="eli5">🧱 ELI5 (Explain Like I'm 10)</option>
+          </select>
+        </div>
+      </header>
+
+      <!-- Panel 1: AI Summary & Analysis -->
+      <div class="tab-content-panel active" id="summaryTabPanel">
+        <div style="text-align: center; padding: 5rem 2rem; color: var(--text-muted);">
+          <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--glass-active); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.25rem auto; color: var(--accent-cyan);">🤖</div>
+          <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-primary);">AI Video Intelligence Workspace</h3>
+          <p style="max-width: 500px; margin: 0 auto; font-size: 0.98rem; color: var(--text-secondary);">Paste any YouTube link in the header above to perform deep transcript analysis, generate structured notes, and unlock grounded chat.</p>
+        </div>
+      </div>
+
+      <!-- Panel 2: Grounded ChatGPT Interface -->
+      <div class="tab-content-panel" id="chatTabPanel">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--glass-border);">
+          <span style="font-size: 0.88rem; color: var(--text-secondary); font-weight: 500; display: flex; align-items: center; gap: 0.4rem;">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-emerald);"></span>
+            Grounded Chat (Answers strictly from transcript)
+          </span>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="regenerateBtn" class="btn btn-secondary" style="padding: 0.35rem 0.85rem; font-size: 0.82rem; border-radius: var(--radius-full);">🔄 Regenerate</button>
+            <button id="clearChatBtn" class="btn btn-secondary" style="padding: 0.35rem 0.85rem; font-size: 0.82rem; border-radius: var(--radius-full);">🗑️ Clear Chat</button>
+          </div>
+        </div>
+
+        <div class="chat-messages-container" id="chatMessagesContainer">
+          <div class="chat-bubble assistant">
+            <div class="chat-avatar">AI</div>
+            <div class="chat-content">
+              Hello! I am <strong>VideoMind AI</strong>. I have chunked and analyzed the entire spoken transcript of this video.<br><br>
+              Ask me anything about what the speaker explained (e.g., <em>"What did the speaker say about X?"</em> or <em>"Explain the topic at 04:15"</em>). I answer strictly from the video with zero hallucination!
+            </div>
+          </div>
+        </div>
+
+        <form id="chatForm" class="chat-input-bar">
+          <div class="chat-input-container">
+            <button type="button" class="input-action-btn" title="Attach file (Future feature)">📎</button>
+            <input type="text" id="chatInputField" class="chat-input-field" placeholder="Ask any question about this video transcript..." autocomplete="off">
+            <button type="button" class="input-action-btn" title="Voice Input (Future feature)">🎙️</button>
+          </div>
+          <button type="submit" class="chat-send-btn" title="Send Question">🚀</button>
+        </form>
+      </div>
+
+      <!-- Panel 3: Flashcards Deck -->
+      <div class="tab-content-panel" id="flashcardsTabPanel">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Panel 4: MCQ Quiz -->
+      <div class="tab-content-panel" id="quizTabPanel">
+        <!-- Rendered dynamically -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="/assets/js/app.js"></script>
+  <script src="/assets/js/firebase.js"></script>
+  <script src="/assets/js/youtube.js"></script>
+  <script src="/js/animations.js"></script>
+  <script src="/assets/js/export.js"></script>
+  <script src="/assets/js/chat.js"></script>
+</body>
+</html>
