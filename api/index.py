@@ -17,11 +17,15 @@ class VercelMiddleware:
         self.wsgi_app = wsgi_app
 
     def __call__(self, environ, start_response):
-        # Vercel passes the original URL path in HTTP_X_MATCHED_PATH or REQUEST_URI
-        matched_path = environ.get('HTTP_X_MATCHED_PATH', '') or environ.get('REQUEST_URI', '')
+        matched_path = (
+            environ.get('HTTP_X_MATCHED_PATH', '') or 
+            environ.get('REQUEST_URI', '') or 
+            environ.get('HTTP_X_ORIGINAL_URI', '') or
+            environ.get('PATH_INFO', '')
+        )
         if matched_path:
             clean_path = matched_path.split('?')[0]
-            if clean_path:
+            if clean_path and clean_path != '/api/index.py':
                 environ['PATH_INFO'] = clean_path
         return self.wsgi_app(environ, start_response)
 

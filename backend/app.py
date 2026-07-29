@@ -56,11 +56,13 @@ def settings_page():
     return send_from_directory(frontend_folder, 'settings.html')
 
 # Catch-all route for static assets (CSS, JS, images)
-@app.route('/<path:path>')
+@app.route('/<path:path>', methods=['GET'])
 def serve_static(path):
-    if os.path.exists(os.path.join(frontend_folder, path)):
-        return send_from_directory(frontend_folder, path)
-    return send_from_directory(frontend_folder, 'index.html')
+    if path.startswith('api/') or path.startswith('api'):
+        return jsonify({"error": "API endpoint not found", "success": False}), 404
+    if os.path.exists(os.path.join(static_dir, path)):
+        return send_from_directory(static_dir, path)
+    return send_from_directory(static_dir, 'index.html')
 
 if __name__ == '__main__':
     port = int(os.getenv("PORT", 5000))
