@@ -8,10 +8,10 @@ if backend_dir not in sys.path:
 
 from app import app
 
-class VercelMiddleware:
+class VercelWSGIHandler:
     """
-    WSGI Middleware for Vercel Serverless Functions.
-    Restores the original PATH_INFO from request headers so Flask routes (/api/analyze, /api/chat, etc.) work accurately.
+    WSGI middleware for Vercel Python serverless execution.
+    Fixes PATH_INFO for POST /api/analyze, POST /api/summary, POST /api/chat, etc.
     """
     def __init__(self, wsgi_app):
         self.wsgi_app = wsgi_app
@@ -20,13 +20,13 @@ class VercelMiddleware:
         matched_path = (
             environ.get('HTTP_X_MATCHED_PATH', '') or 
             environ.get('REQUEST_URI', '') or 
-            environ.get('HTTP_X_ORIGINAL_URI', '') or
+            environ.get('HTTP_X_ORIGINAL_URI', '') or 
             environ.get('PATH_INFO', '')
         )
         if matched_path:
             clean_path = matched_path.split('?')[0]
-            if clean_path and clean_path != '/api/index.py':
+            if clean_path and clean_path not in ['/api/index.py', '/api/index']:
                 environ['PATH_INFO'] = clean_path
         return self.wsgi_app(environ, start_response)
 
-app.wsgi_app = VercelMiddleware(app.wsgi_app)
+app.wsgi_app = VercelWSGIHandler(app.wsgi_app)
