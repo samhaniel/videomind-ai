@@ -1,19 +1,53 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "api/index.py"
+      "source": "/api/(.*)",
+      "destination": "/api/index.py"
     },
     {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
+      "source": "/chat.html",
+      "destination": "/frontend/chat.html"
+    },
+    {
+      "source": "/chat",
+      "destination": "/frontend/chat.html"
+    },
+    {
+      "source": "/history.html",
+      "destination": "/frontend/history.html"
+    },
+    {
+      "source": "/history",
+      "destination": "/frontend/history.html"
+    },
+    {
+      "source": "/settings.html",
+      "destination": "/frontend/settings.html"
+    },
+    {
+      "source": "/settings",
+      "destination": "/frontend/settings.html"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/frontend/assets/$1"
+    },
+    {
+      "source": "/css/(.*)",
+      "destination": "/frontend/css/$1"
+    },
+    {
+      "source": "/js/(.*)",
+      "destination": "/frontend/js/$1"
+    },
+    {
+      "source": "/",
+      "destination": "/frontend/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
     }
   ]
 }
