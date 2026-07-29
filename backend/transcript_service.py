@@ -10,68 +10,69 @@ class TranscriptService:
     def fetch_transcript(video_id: str, languages: List[str] = None) -> Dict[str, Any]:
         """
         Fetch closed captions / transcript entries for a video ID.
-        Supports youtube-transcript-api v1.2.4+ (fetch/list) and legacy v0.6+ (get_transcript).
+        Robustly supports manual, auto-generated, and multi-language transcripts across API versions.
         """
         if languages is None:
-            languages = ['en', 'en-US', 'en-GB', 'es', 'fr', 'de', 'hi', 'pt', 'ja', 'ko']
+            languages = ['en', 'en-US', 'en-GB', 'ta', 'hi', 'es', 'fr', 'de', 'pt', 'ja', 'ko']
             
         raw_items = []
         has_transcript = False
         
         try:
-            import youtube_transcript_api
             from youtube_transcript_api import YouTubeTranscriptApi
-            
             api_transcript = None
             
-            # 1. Try modern v1.2+ API: YouTubeTranscriptApi().fetch(video_id) or YouTubeTranscriptApi.fetch(video_id)
+            # Strategy 1: Use instance list() which supports auto-generated & multi-language captions
             try:
-                if hasattr(YouTubeTranscriptApi, 'fetch'):
+                yt = YouTubeTranscriptApi()
+                if hasattr(yt, 'list'):
+                    t_list = yt.list(video_id)
+                    # Try manually created transcript first
                     try:
-                        api_transcript = YouTubeTranscriptApi.fetch(video_id, languages=languages)
-                    except TypeError:
-                        api_transcript = YouTubeTranscriptApi.fetch(video_id)
-                elif hasattr(YouTubeTranscriptApi, 'get_transcript'):
-                    api_transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
-            except Exception as e1:
-                logger.debug(f"Direct transcript fetch failed: {str(e1)}")
-                
-            # 2. Try instance fallback
-            if not api_transcript:
-                try:
-                    yt = YouTubeTranscriptApi()
-                    if hasattr(yt, 'fetch'):
+                        t = t_list.find_manually_created_transcript(languages)
+                        api_transcript = t.fetch()
+                    except Exception:
+                        pass
+                    
+                    # Try auto-generated transcript second
+                    if not api_transcript:
                         try:
-                            api_transcript = yt.fetch(video_id, languages=languages)
-                        except TypeError:
-                            api_transcript = yt.fetch(video_id)
-                    elif hasattr(yt, 'get_transcript'):
-                        api_transcript = yt.get_transcript(video_id, languages=languages)
-                except Exception as e2:
-                    logger.debug(f"Instance fetch failed: {str(e2)}")
+                            t = t_list.find_generated_transcript(languages)
+                            api_transcript = t.fetch()
+                        except Exception:
+                            pass
+                            
+                    # Fallback to any transcript available in list
+                    if not api_transcript:
+                        for t in t_list:
+                            try:
+                                api_transcript = t.fetch()
+                                if api_transcript:
+                                    break
+                            except Exception:
+                                continue
+            except Exception as e1:
+                logger.debug(f"Strategy 1 (list) failed for {video_id}: {str(e1)}")
 
-            # 3. Try transcript list fallback
+            # Strategy 2: Direct fetch / get_transcript
             if not api_transcript:
                 try:
-                    t_list = None
-                    if hasattr(YouTubeTranscriptApi, 'list'):
-                        t_list = YouTubeTranscriptApi.list(video_id)
-                    elif hasattr(YouTubeTranscriptApi, 'list_transcripts'):
-                        t_list = YouTubeTranscriptApi.list_transcripts(video_id)
-                    elif hasattr(YouTubeTranscriptApi(), 'list'):
-                        t_list = YouTubeTranscriptApi().list(video_id)
-                        
-                    if t_list:
-                        for t in t_list:
-                            api_transcript = t.fetch()
-                            break
+                    if hasattr(YouTubeTranscriptApi, 'get_transcript'):
+                        api_transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=languages)
+                except Exception as e2:
+                    logger.debug(f"Strategy 2 (get_transcript with languages) failed: {str(e2)}")
+
+            # Strategy 3: Unconstrained get_transcript
+            if not api_transcript:
+                try:
+                    if hasattr(YouTubeTranscriptApi, 'get_transcript'):
+                        api_transcript = YouTubeTranscriptApi.get_transcript(video_id)
                 except Exception as e3:
-                    logger.warning(f"List transcript fallback error for {video_id}: {str(e3)}")
+                    logger.debug(f"Strategy 3 (get_transcript default) failed: {str(e3)}")
 
             if api_transcript:
                 has_transcript = True
                 for entry in api_transcript:
-                    # Handle both dictionary entries and FetchedTranscriptSnippet objects
                     if isinstance(entry, dict):
                         text = entry.get("text", "").replace("\n", " ").strip()
                         start = float(entry.get("start", 0))
