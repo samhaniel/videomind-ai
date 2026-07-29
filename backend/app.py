@@ -37,8 +37,6 @@ app.register_blueprint(api_bp, url_prefix='/api')
 
 # Routes for serving frontend HTML pages
 @app.route('/')
-@app.route('/api/index.py')
-@app.route('/api/index')
 def index_page():
     return send_from_directory(frontend_folder, 'index.html')
 
