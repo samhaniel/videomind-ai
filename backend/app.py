@@ -15,9 +15,11 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 load_dotenv()
 
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 frontend_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'frontend'))
+static_dir = frontend_folder if os.path.exists(os.path.join(frontend_folder, 'index.html')) else root_dir
 
-app = Flask(__name__, static_folder=frontend_folder, static_url_path='')
+app = Flask(__name__, static_folder=static_dir, static_url_path='')
 app.secret_key = os.getenv("SECRET_KEY", "videomind-secret-key-2026")
 
 if HAS_CORS:

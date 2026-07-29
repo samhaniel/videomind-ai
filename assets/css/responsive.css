@@ -1,0 +1,314 @@
+/* VideoMind AI - Comprehensive Mobile & Responsive Engine */
+
+*, *::before, *::after {
+  box-sizing: border-box !important;
+}
+
+html, body {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+@media (max-width: 1280px) {
+  .studio-container {
+    grid-template-columns: 360px 1fr !important;
+    gap: 1.25rem !important;
+    padding: 1.25rem !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  body {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  .studio-container {
+    grid-template-columns: 100% !important;
+    height: auto !important;
+    min-height: auto !important;
+    overflow-y: visible !important;
+    padding: 0.85rem !important;
+    gap: 1.1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .video-sidebar {
+    height: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .studio-main {
+    height: auto !important;
+    min-height: 550px !important;
+    max-height: none !important;
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .hero-title {
+    font-size: 2.8rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.65rem 0.85rem !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .nav-brand {
+    font-size: 1.1rem !important;
+  }
+
+  .nav-links {
+    display: none !important;
+  }
+
+  .nav-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #studioUrlForm {
+    order: 3 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    margin-top: 0.2rem !important;
+    display: flex !important;
+    gap: 0.4rem !important;
+  }
+
+  #studioUrlForm input#studioUrlInput {
+    flex: 1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    font-size: 0.82rem !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  #studioUrlForm button {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    padding: 0.5rem 0.85rem !important;
+    font-size: 0.82rem !important;
+  }
+
+  .hero-section {
+    margin: 1.75rem auto 1.25rem auto !important;
+    padding: 0 0.85rem !important;
+  }
+
+  .hero-title {
+    font-size: 2.1rem !important;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem !important;
+  }
+
+  .url-input-container {
+    flex-direction: column !important;
+    padding: 0.65rem !important;
+    gap: 0.55rem !important;
+    border-radius: var(--radius-lg) !important;
+  }
+
+  .url-input-icon {
+    display: none !important;
+  }
+
+  .url-input {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .url-submit-btn {
+    width: 100% !important;
+  }
+
+  .studio-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.65rem !important;
+    padding: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .studio-tabs {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    padding-bottom: 0.35rem !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  .studio-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .tab-btn {
+    font-size: 0.8rem !important;
+    padding: 0.4rem 0.75rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  #summaryStyleSelect {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 0.82rem !important;
+  }
+
+  .tab-content-panel {
+    padding: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .chat-messages-container {
+    padding-right: 0 !important;
+    margin-bottom: 0.75rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .chat-bubble {
+    max-width: 100% !important;
+    width: 100% !important;
+    gap: 0.5rem !important;
+  }
+
+  .chat-avatar {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.8rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .chat-content {
+    flex: 1 !important;
+    min-width: 0 !important;
+    padding: 0.75rem 0.85rem !important;
+    font-size: 0.88rem !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .chat-input-bar {
+    padding: 0.65rem !important;
+    gap: 0.4rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .chat-input-container {
+    flex: 1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+  .chat-input-field {
+    width: 100% !important;
+    min-width: 0 !important;
+    font-size: 0.85rem !important;
+    padding: 0.45rem 0.65rem !important;
+  }
+
+  .chat-send-btn {
+    flex-shrink: 0 !important;
+    padding: 0.45rem 0.75rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .player-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .video-info-card {
+    padding: 0.85rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .creator-header {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .creator-details {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .video-title {
+    font-size: 0.98rem !important;
+    word-break: break-word !important;
+  }
+
+  .video-action-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 0.4rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .video-action-bar .btn {
+    flex: 1 1 calc(50% - 0.4rem) !important;
+    min-width: 0 !important;
+    font-size: 0.78rem !important;
+    padding: 0.45rem 0.5rem !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+
+  .flashcard-wrapper {
+    height: 260px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-title span {
+    display: none !important;
+  }
+
+  .hero-title {
+    font-size: 1.75rem !important;
+  }
+
+  .studio-container {
+    padding: 0.4rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .tab-content-panel {
+    padding: 0.5rem !important;
+  }
+
+  .video-info-card {
+    padding: 0.65rem !important;
+  }
+
+  .video-action-bar .btn {
+    flex: 1 1 100% !important;
+  }
+}
