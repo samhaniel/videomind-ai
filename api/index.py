@@ -1,5 +1,6 @@
 import os
 import sys
+from app import app
 
 # Ensure backend directory is in python path
 backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend'))

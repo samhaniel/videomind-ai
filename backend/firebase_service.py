@@ -1,11 +1,18 @@
 import os
 import json
 import logging
+import tempfile
 from typing import Dict, Any, List, Optional
 from dotenv import load_dotenv
 
 load_dotenv()
 logger = logging.getLogger(__name__)
+
+# Vercel (and most serverless platforms) only allow writes to /tmp - the rest of the
+# deployed project filesystem is read-only. tempfile.gettempdir() resolves to /tmp
+# automatically in that environment and to the OS temp dir locally, so this works
+# in both places without any extra configuration.
+IS_SERVERLESS = bool(os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"))
 
 # Firebase Firestore helper wrapper
 class FirebaseService:
@@ -65,7 +72,10 @@ class FirebaseService:
             return False
 
     def _get_cache_filepath(self) -> str:
-        cache_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".cache")
+        if IS_SERVERLESS:
+            cache_dir = os.path.join(tempfile.gettempdir(), "videomind_cache")
+        else:
+            cache_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".cache")
         os.makedirs(cache_dir, exist_ok=True)
         return os.path.join(cache_dir, "session_cache.json")
 

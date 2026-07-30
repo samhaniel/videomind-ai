@@ -1,6 +1,6 @@
 import os
 import sys
-from flask import Flask, send_from_directory, render_template_string
+from flask import Flask, send_from_directory, render_template_string, jsonify
 from dotenv import load_dotenv
 
 # Safe import for flask_cors
